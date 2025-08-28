@@ -10,7 +10,7 @@ set -euo pipefail
 main() {
     # Check if GitHub CLI is installed
     if ! command -v gh &> /dev/null; then
-        printf "Error: 'gh' command not found. Please install GitHub CLI from https://cli.github.com/.\n" >&2
+        printf "Error: 'gh' command not found. Please install GitHub CLI from https://cli.github.com/ \n" >&2
         exit 1
     fi
     # Determine default owner
@@ -22,17 +22,17 @@ main() {
     # Process repository path
     local REPO_PATH="$1"
     if ! [[ "$REPO_PATH" == */* ]]; then
-        printf "No owner specified, assuming '$DEFAULT_OWNER', path set to '$DEFAULT_OWNER/$REPO_PATH'\n"
+        printf "Info: No owner specified, assuming '$DEFAULT_OWNER', path set to '$DEFAULT_OWNER/$REPO_PATH'\n"
         REPO_PATH="$DEFAULT_OWNER/$REPO_PATH"
     fi
     # Check if directory already exists
     if [ -d "$REPO_PATH" ]; then
-        printf "Directory '$REPO_PATH' already exists\n"
+        printf "Error: Directory '$REPO_PATH' already exists\n"
         exit 1
     fi
     # Check if repository exists on GitHub
     if ! gh repo view "$REPO_PATH" &> /dev/null; then
-        printf "Could not find repository on GitHub\n"
+        printf "Error: Could not find repository on GitHub\n"
         exit 1
     fi
     # clone the repository
