@@ -32,7 +32,7 @@ main() {
     fi
     # Check if repository exists on GitHub
     if ! gh repo view "$REPO_PATH" &> /dev/null; then
-        printf "Error: Could not find repository on GitHub\n"
+        printf "Error: Could not find repository '$REPO_PATH' on GitHub\n"
         exit 1
     fi
     # clone the repository
