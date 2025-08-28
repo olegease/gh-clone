@@ -10,13 +10,13 @@ set -euo pipefail
 main() {
     # Check if GitHub CLI is installed
     if ! command -v gh &> /dev/null; then
-        printf "Error: 'gh' command not found. Please install GitHub CLI from https://cli.github.com/ \n" >&2
+        printf "Error: 'gh' command not found. Please install GitHub CLI from https://cli.github.com/ web page\n" >&2
         exit 1
     fi
     # Determine default owner
     local DEFAULT_OWNER
     if ! DEFAULT_OWNER=$(gh api user --jq .login 2>/dev/null); then
-        printf "Error: Could not determine GitHub user. Please run 'gh auth login'." >&2
+        printf "Error: Could not determine GitHub user. Please run 'gh auth login'\n" >&2
         exit 1
     fi
     # Process repository path
@@ -56,7 +56,7 @@ main() {
 }
 # Check if repository path is provided
 if [ "$#" -ne 1 ]; then
-    printf "Error: This script requires exactly one argument.\n" >&2
+    printf "Error: This script requires exactly one argument\n" >&2
     printf "Usage: %s <[owner/]repo>\n" "$(basename "$0")" >&2
     exit 1
 fi
