@@ -1,49 +1,50 @@
-#!/bin/sh
+#!/bin/bash
 
 : <<'COMMENT'
+Outdated script, new version rewritten in shell (gh-clone.sh)
 This script clones a GitHub repository and sets up the remotes for a forked repository.
 Ⓒ 2025 Oleg'Ease'Kharchuk ᦒ
 COMMENT
 
-set -eu
+set -euo pipefail
 
 main() {
     # Check if GitHub CLI is installed
-    if ! command -v gh >/dev/null 2>&1; then
+    if ! command -v gh &> /dev/null; then
         printf "Error: 'gh' command not found. Please install GitHub CLI from https://cli.github.com/ web page\n" >&2
         exit 1
     fi
     # Determine default owner
-    DEFAULT_OWNER=$(gh api user --jq .login 2>/dev/null || true)
-    if [ -z "$DEFAULT_OWNER" ]; then
+    local DEFAULT_OWNER
+    if ! DEFAULT_OWNER=$(gh api user --jq .login 2>/dev/null); then
         printf "Error: Could not determine GitHub user. Please run 'gh auth login'\n" >&2
         exit 1
     fi
     # Process repository path
-    REPO_PATH="$1"
-    if [ "$(expr index "$REPO_PATH" /)" -eq 0 ]; then
-        printf "Info: No owner specified, assuming '%s', path set to '%s/%s'\n" "$DEFAULT_OWNER" "$DEFAULT_OWNER" "$REPO_PATH"
+    local REPO_PATH="$1"
+    if ! [[ "$REPO_PATH" == */* ]]; then
+        printf "Info: No owner specified, assuming '$DEFAULT_OWNER', path set to '$DEFAULT_OWNER/$REPO_PATH'\n"
         REPO_PATH="$DEFAULT_OWNER/$REPO_PATH"
     fi
     # Check if directory already exists
     if [ -d "$REPO_PATH" ]; then
-        printf "Error: Directory '%s' already exists\n" "$REPO_PATH"
+        printf "Error: Directory '$REPO_PATH' already exists\n"
         exit 1
     fi
     # Check if repository exists on GitHub
-    if ! gh repo view "$REPO_PATH" >/dev/null 2>&1; then
-        printf "Error: Could not find repository '%s' on GitHub\n" "$REPO_PATH"
+    if ! gh repo view "$REPO_PATH" &> /dev/null; then
+        printf "Error: Could not find repository '$REPO_PATH' on GitHub\n"
         exit 1
     fi
     # clone the repository
-    OWNER=$(dirname "$REPO_PATH")
-    REPO=$(basename "$REPO_PATH")
+    local OWNER=$(dirname "$REPO_PATH")
+    local REPO=$(basename "$REPO_PATH")
     mkdir -p "$OWNER"
-    cd "$OWNER" || exit 1
+    cd "$OWNER"
     gh repo clone "$REPO_PATH"
-    cd "$REPO" || exit 1
+    cd "$REPO"
     # rename remotes
-    if git remote get-url upstream >/dev/null 2>&1; then
+    if git remote get-url upstream &> /dev/null; then
         git remote rename origin fork
         git remote rename upstream root
     else
@@ -54,11 +55,13 @@ main() {
     printf "\nDone! Remote configuration:\n"
     git remote -v
 }
+# Outdated script
+printf "Error: script is outdated and subject to be removed use 'gh-clone.sh' instead\n"
+exit 1
 # Check if repository path is provided
 if [ "$#" -ne 1 ]; then
     printf "Error: This script requires exactly one argument\n" >&2
     printf "Usage: %s <[owner/]repo>\n" "$(basename "$0")" >&2
     exit 1
 fi
-# Execute
 main "$1"
