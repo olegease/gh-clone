@@ -64,7 +64,7 @@ main() {
                 WARNING_END="\033[0m"
             fi
 
-            printf "${WARNING_BEG}! upstream owner '%s' not related to my organization${WARNING_END}\n" "$UPSTREAM_OWNER"
+            printf "${WARNING_BEG}! upstream owner '%s' not related to a recognized organization${WARNING_END}\n" "$UPSTREAM_OWNER"
         fi
     else
         printf "Not a fork, rename origin to original\n"
