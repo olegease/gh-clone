@@ -1,6 +1,7 @@
 #!/bin/bash
 
 : <<'COMMENT'
+Outdated script, new version rewritten in shell (gh-clone.sh)
 This script clones a GitHub repository and sets up the remotes for a forked repository.
 Ⓒ 2025 Oleg'Ease'Kharchuk ᦒ
 COMMENT
@@ -54,6 +55,9 @@ main() {
     printf "\nDone! Remote configuration:\n"
     git remote -v
 }
+# Outdated script
+printf "Error: script is outdated and subject to be removed use 'gh-clone.sh' instead\n"
+exit 1
 # Check if repository path is provided
 if [ "$#" -ne 1 ]; then
     printf "Error: This script requires exactly one argument\n" >&2
