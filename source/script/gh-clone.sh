@@ -45,7 +45,27 @@ main() {
     # rename remotes
     if git remote get-url upstream >/dev/null 2>&1; then
         git remote rename origin fork
-        git remote rename upstream root
+        UPSTREAM_URL=$(git remote get-url upstream)
+        UPSTREAM_OWNER=$(echo "$UPSTREAM_URL" | sed -n 's#.*github\.com[:/]\([^/]*\)/.*#\1#p')
+        OLEGEASE_ORGS="olegease forkease soneight son8case son8test son8fork m20odule"
+        OLEGEASE_FOUND=0
+        for org in $OLEGEASE_ORGS; do
+            if [ "$UPSTREAM_OWNER" = "$org" ]; then
+                OLEGEASE_FOUND=1
+                git remote rename upstream root
+                break
+            fi
+        done
+        if [ "$OLEGEASE_FOUND" -eq 0 ]; then
+            WARNING_BEG=""
+            WARNING_END=""
+            if [ -t 1 ]; then
+                WARNING_BEG="\033[33m"
+                WARNING_END="\033[0m"
+            fi
+
+            printf "${WARNING_BEG}! upstream owner '%s' not related to a recognized organization${WARNING_END}\n" "$UPSTREAM_OWNER"
+        fi
     else
         printf "Not a fork, rename origin to original\n"
         git remote rename origin original
