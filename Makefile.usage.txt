@@ -1,0 +1,10 @@
+
+    usage: print this (defaults on empty) directive
+    cmake: configures project using ninja generator
+    ninja: synthesize project using ninja generator
+    ctest: legitimize project under build directory
+    clean: ruthlessly removes whole build directory
+    allin: (clean->cmake->ninja->ctest)
+    build: (cmake->ninja)
+    tests: (ninja->ctest)
+

@@ -4,4 +4,4 @@
 
 Project Overview
 
-###### each folder MAY contain README with additional information about project
+###### each folder MAY contain README with additional materials
